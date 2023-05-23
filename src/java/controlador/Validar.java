@@ -37,8 +37,23 @@ public class Validar extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) //El man ese del video tenia el mismo contenido en el DOPOST el video pasado y le hizo refactor a Validar a Controlador.Validar
             throws ServletException, IOException {
+        String accion = request.getParameter("accion");       
+        if(accion.equalsIgnoreCase("Ingresar")){
+            String user = request.getParameter("txtuser");
+            String pass = request.getParameter("txtpass");
+            em = edao.validar(user,pass);
+            if(em.getUser()!=null){
+                request.setAttribute("usuario", em);
+                System.out.println("usuario:"+user);
+                request.getRequestDispatcher("Controlador?menu=Principal").forward(request, response);
+            }else{
+                request.getRequestDispatcher("index.jsp").forward(request, response);
+            }
+        }else{
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+        }
         processRequest(request, response);
     }
     /**
@@ -60,7 +75,7 @@ public class Validar extends HttpServlet {
             if(em.getUser()!=null){
                 request.setAttribute("usuario", em);
                 System.out.println("usuario:"+user);
-                request.getRequestDispatcher("Controlador?accion = Principal").forward(request, response);
+                request.getRequestDispatcher("Controlador?menu=Principal").forward(request, response);
             }else{
                 request.getRequestDispatcher("index.jsp").forward(request, response);
             }
